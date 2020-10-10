@@ -3,8 +3,10 @@ from os.path import join, dirname
 from dotenv import load_dotenv
 import os
 import flask
+from flask import request
 import flask_sqlalchemy
 import flask_socketio
+import bot
 
 
 MESSAGES_RECEIVED_CHANNEL = 'messages received'
@@ -35,6 +37,15 @@ import models
 db.create_all()
 db.session.commit()
 
+def parseM(data):
+    words = data['message'].split()
+    print(words)
+    if(words[0] == "!!"):
+        bot.switch(words)
+    
+
+connected = []
+
 def emit_all_messages(channel):#--------------------------------------
     # TODO   - content.jsx is looking for key 'allAddresses' we want to emit to allAddresses
     all_messages = [ 
@@ -48,9 +59,14 @@ def emit_all_messages(channel):#--------------------------------------
 @socketio.on('connect')
 def on_connect():
     print('Someone connected!')
+    connected.append(request.sid)
+
     socketio.emit('connected', {
         'test': 'Connected'
     })
+    print(connected)
+    
+    #bot.funtranslate("Hello im nick")
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
     
@@ -58,10 +74,16 @@ def on_connect():
 @socketio.on('disconnect')
 def on_disconnect():
     print ('Someone disconnected!')
+    connected.remove(request.sid)
+    print(connected)
+
 
 @socketio.on('new message input')
 def on_new_message(data):
     print("Got an event for new message input with data:", data)
+    parseM(data)
+        
+
     
     db.session.add(models.Messages(data["message"]));
     db.session.commit();
