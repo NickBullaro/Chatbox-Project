@@ -25,14 +25,14 @@ export function Content() {
     getNewAddresses();
 
     return (
-        <div>
+        <div class="chatbox">
             <h1>USPS Addresses!</h1>
-                <ol>
+                <ul>
                     {
                         addresses.map((address, index) =>
-                        <li key={index}>{address}</li>)
+                        <li key={index}>Name: {address}</li>)
                     }
-                </ol>
+                </ul>
             <Button />
         </div>
     );
