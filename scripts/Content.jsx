@@ -6,31 +6,31 @@ import { Button } from './Button';
 import { Socket } from './Socket';
 
 export function Content() {
-    const [addresses, setAddresses] = React.useState([]);
+    const [messages, setMessages] = React.useState([]);
     
-    function getNewAddresses() {
+    function getNewMessage() {
         React.useEffect(() => {
-            Socket.on('addresses received', updateAddresses);
+            Socket.on('messages received', updateMessages);
             return () => {
-                Socket.off('addresses received', updateAddresses);
+                Socket.off('messages received', updateMessages);
             }
         });
     }
     
-    function updateAddresses(data) {
-        console.log("Received addresses from server: " + data['allAddresses']);
-        setAddresses(data['allAddresses']);
+    function updateMessages(data) {
+        console.log("Received messages from server: " + data['allMessages']);
+        setMessages(data['allMessages']);
     }
     
-    getNewAddresses();
+    getNewMessage();
 
     return (
         <div class="chatbox">
-            <h1>USPS Addresses!</h1>
+            <h1>Messages!</h1>
                 <ul>
                     {
-                        addresses.map((address, index) =>
-                        <li key={index}>Name: {address}</li>)
+                        messages.map((message, index) =>
+                        <li key={index}>Name: {message}</li>)
                     }
                 </ul>
             <Button />
