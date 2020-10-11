@@ -87,7 +87,7 @@ def on_new_message(data):
     db.session.commit();
     if output:
         db.session.add(models.Messages("Chatbot: " + output));
-    db.session.commit();
+        db.session.commit();
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 

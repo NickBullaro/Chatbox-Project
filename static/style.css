@@ -1,6 +1,7 @@
 
 body {
     background-color: blue;
+    width: 80%;
 }
 
 .chatbox{
@@ -9,7 +10,7 @@ body {
 }
 
 h1 {
-    width: 75%;
+    width: auto;
     color: white;
     margin-bottom: 5px;
     font-size: 20pt;
@@ -17,9 +18,10 @@ h1 {
 }
 
 ul {
+    padding-left: 10px;
     height: 80%;
-    width: 75%;
-    border: 2px solid red;
+    width: auto;
+    border: 3px solid red;
     background-image: url(boxxy-8755-2560x1600.jpg);
     background-repeat: no-repeat;
     background-position: center;
@@ -38,8 +40,8 @@ li {
 .button {
     margin-top: 0px;
     height: 4%;
-    width: 77%;
-    border: 2px solid white;
+    width: auto;
+    border: 3px solid white;
 }
 
 .input {
