@@ -11,14 +11,15 @@ def switch(arg):
         if len(arg) < 3:
             return "You forgot to enter what you wanted me to translate you silly goose!"
         text = str(arg[2:])
-        funtranslate(text)
+        return funtranslate(text)
         
     if command == "help":
-        helper()
+        return helper()
         
     if command == "about":
-        about()
-    return
+        return about()
+    else:
+        return "Invalid command! Enter '!! help' to see available commands!"
 
 
 def about():

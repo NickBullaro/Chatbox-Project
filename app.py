@@ -41,7 +41,8 @@ def parseM(data):
     words = data['message'].split()
     print(words)
     if(words[0] == "!!"):
-        bot.switch(words)
+        return bot.switch(words)
+    
     
 
 
@@ -68,9 +69,6 @@ def on_connect():
     })
     print(connected)
     
-    #bot.funtranslate("Hello im nick")
-    
-    
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
     
@@ -85,7 +83,7 @@ def on_disconnect():
 @socketio.on('new message input')
 def on_new_message(data):
     print("Got an event for new message input with data:", data)
-    parseM(data)
+    output = parseM(data)
         
 
     
