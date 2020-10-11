@@ -41,15 +41,15 @@ def parseM(data):
     words = data['message'].split()
     print(words)
     if(words[0] == "!!"):
-        return bot.switch(words)
-    
+        out = bot.switch(words)
+        return out
+
     
 
 
 connected = []
 
-def emit_all_messages(channel):#--------------------------------------
-    # TODO   - content.jsx is looking for key 'allAddresses' we want to emit to allAddresses
+def emit_all_messages(channel):
     all_messages = [ 
         db_message.message for db_message in \
         db.session.query(models.Messages).all()]
@@ -62,8 +62,6 @@ def emit_all_messages(channel):#--------------------------------------
 def on_connect():
     print('Someone connected!')
     connected.append(request.sid)
-    print(connected)
-
     socketio.emit('connected', {
         'test': 'connected'
     })
@@ -83,11 +81,12 @@ def on_disconnect():
 @socketio.on('new message input')
 def on_new_message(data):
     print("Got an event for new message input with data:", data)
-    output = parseM(data)
-        
-
+    output = parseM(data)# send output
     
-    db.session.add(models.Messages(data["message"]));
+    db.session.add(models.Messages(request.sid + ": " + data["message"]));
+    db.session.commit();
+    if output:
+        db.session.add(models.Messages("Chatbot: " + output));
     db.session.commit();
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)

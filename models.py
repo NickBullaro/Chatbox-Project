@@ -5,7 +5,7 @@ from app import db
 
 class Messages(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.String(120))
+    message = db.Column(db.String(200))
     
     def __init__(self, a):
         self.message = a

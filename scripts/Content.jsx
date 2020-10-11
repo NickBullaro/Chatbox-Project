@@ -50,7 +50,7 @@ export function Content() {
                 <ul id="box">
                     {
                         messages.map((message, index) =>
-                        <li key={index}>Name : {message}</li>)
+                        <li key={index}>{message}</li>)
                     }
                 </ul>
             <Button />
