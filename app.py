@@ -44,6 +44,7 @@ def parseM(data):
         bot.switch(words)
     
 
+
 connected = []
 
 def emit_all_messages(channel):#--------------------------------------
@@ -60,13 +61,16 @@ def emit_all_messages(channel):#--------------------------------------
 def on_connect():
     print('Someone connected!')
     connected.append(request.sid)
+    print(connected)
 
     socketio.emit('connected', {
-        'test': 'Connected'
+        'test': 'connected'
     })
     print(connected)
     
     #bot.funtranslate("Hello im nick")
+    
+    
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
     
