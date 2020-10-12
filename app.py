@@ -38,6 +38,7 @@ import models
 db.create_all()
 db.session.commit()
 
+
 def parseM(data):
     words = data['message'].split()
     print(words)
@@ -96,7 +97,7 @@ def on_new_message(data):
     db.session.add(models.Messages(request.sid + ": " + data["message"]));
     db.session.commit();
     if output:
-        db.session.add(models.Messages("Chatbot: " + output));
+        db.session.add(models.Messages("Awesome Bot: " + output));
         db.session.commit();
     
     emit_all_users(USERS_RECEIVED_CHANNEL)

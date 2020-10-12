@@ -1,5 +1,5 @@
 # Set up React  
-0. `cd ~/environment && git clone https://github.com/Sresht/lect11/ && cd lect11`    
+0. `cd ~/environment && git clone https://github.com/Sresht/lect11-starter/ && cd lect11`    
 1. Install your stuff!    
   a) `npm install`    
   b) `pip install flask-socketio`    
