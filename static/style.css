@@ -55,6 +55,7 @@ li {
 }
 
 .users {
+    margin: 0px;
     width: 10%;
     position: absolute;
     left: 35%;
