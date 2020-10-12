@@ -83,14 +83,19 @@ If that doesn't work, remove the 'PGUSER=<user>' from the command and try again.
 
 
 # Known Issues
-1. One known issue is 
 
-2. Another known issue is 
+1. One known issue with this project was the length of the messages. The database is set up to add messages with a length up to 1,000. If the length of the message is longer than that, sqlalchemy will throw an error. I fixed this by catching the error, rolling back the db session, and sending an error message to the database saying the user's message failed to send.
 
-3. Another known issue is
+2. Another known issue was having usernames be displayed next to the messages. I solved this by using each connection's socketio SID instead of custom names and hardcoding them into the database add command.
 
+3. Another known issue is 
 
+4. Another known issue is 
+
+5. Another known issue is 
 
 
 
 # Improvements
+
+1. One improvement I would make would be to figure out how to allow for custom usernames when the user connects to the app. I believe I would go about it by creating another .jsx file for making a log in screen of sorts. Then I would take that input, redirect to the actual chatbox page, and match that input to each SID in a dictionary. Then, when a person sends a message, I would grab the corresponding username, and send it with the message.

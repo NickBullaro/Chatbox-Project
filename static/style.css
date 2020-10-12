@@ -33,6 +33,7 @@ ul {
 
 li {
     list-style-type: none;
+    word-wrap: normal;
     margin-top: 10px;
     color: white;
     font-size: 16pt;

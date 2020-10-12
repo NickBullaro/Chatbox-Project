@@ -6,6 +6,7 @@ import flask
 from flask import request
 import flask_sqlalchemy
 import flask_socketio
+import models
 import bot
 
 
@@ -20,20 +21,17 @@ socketio.init_app(app, cors_allowed_origins="*")
 dotenv_path = join(dirname(__file__), 'sql.env')
 load_dotenv(dotenv_path)
 
-#sql_user = os.environ['SQL_USER']
-#sql_pwd = os.environ['SQL_PASSWORD']
-#dbuser = os.environ['USER']
-#database_uri = 'postgresql://{}:{}@localhost/postgres'.format(sql_user, sql_pwd)
+
 database_uri = os.environ['DATABASE_URL']
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
 
+
 db = flask_sqlalchemy.SQLAlchemy(app)
 db.init_app(app)
 db.app = app
 
-import models
 
 db.create_all()
 db.session.commit()
@@ -49,7 +47,7 @@ def parseM(data):
     
 
 
-connected = []
+connected = []# Array to store the sid's of users for naming purposes
 
 
 def emit_all_users(channel):
@@ -59,6 +57,7 @@ def emit_all_users(channel):
         'all_users': all_users
     })
 
+
 def emit_all_messages(channel):
     all_messages = [ 
         db_message.message for db_message in \
@@ -67,6 +66,7 @@ def emit_all_messages(channel):
     socketio.emit(channel, {
         'allMessages': all_messages
     })
+
 
 @socketio.on('connect')
 def on_connect():
@@ -92,14 +92,14 @@ def on_disconnect():
 @socketio.on('new message input')
 def on_new_message(data):
     print("Got an event for new message input with data:", data)
-    output = parseM(data)# send output
+    output = parseM(data)# Save output for sending bot response to DB
     try:
         db.session.add(models.Messages(request.sid + ": " + data["message"]));
         db.session.commit();
-        if output:
+        if output:# If there is a bot response
             db.session.add(models.Messages("Awesome Bot: " + output));
             db.session.commit();
-    except Exception as error:
+    except Exception as error:# If there is an error like message is too long.
         db.session.rollback();
         db.session.add(models.Messages("ERROR: User " + request.sid + "'s message has failed to send! Please try again!"));
         db.session.commit();
@@ -107,12 +107,14 @@ def on_new_message(data):
     emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
+
 @app.route('/')
 def index():
     emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
     return flask.render_template("index.html")
+
 
 if __name__ == '__main__': 
     socketio.run(
