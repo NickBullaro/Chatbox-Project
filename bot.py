@@ -58,5 +58,5 @@ def joke():
         }
     
     response = requests.request("GET", url, headers=headers)
-    
-    return response.text
+    respo = response.json()
+    return respo["content"]
