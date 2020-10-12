@@ -1,6 +1,6 @@
 # Set up React  
 0. `cd ~/environment && git clone https://github.com/NJIT-CS490/project2-m1-nsb38 && cd project2-m1-nsb38`    
-1. Install your stuff!    
+1. Install your stuff! :exclamation: REMEMBER `sudo` might not be needed. If it doesn't work with sudo, try without. :exclamation:
   a) `npm install`    
   b) `pip install flask-socketio`    
   c) `pip install eventlet`    
@@ -35,7 +35,7 @@
     a) `psql`    
     b) `\du` look for ec2-user as a user    
     c) `\l` look for ec2-user as a database    
-7. Make a new user:    
+7. Make a new user:
     a) `psql` (if you already quit out of psql)    
     ## REPLACE THE [VALUES] IN THIS COMMAND! Type this with a new (short) unique password.   
     b) I recommend 4-5 characters - it doesn't have to be very secure. Remember this password!  
@@ -84,7 +84,7 @@ If that doesn't work, remove the 'PGUSER=<user>' from the command and try again.
 
 # Known Issues
 
-1. One known issue with this project was the length of the messages. The database is set up to add messages with a length up to 1,000. If the length of the message is longer than that, sqlalchemy will throw an error. I fixed this by catching the error, rolling back the db session, and sending an error message to the database saying the user's message failed to send.
+1. One known issue with this project was the length of the messages. The databasewas originally set up to allow messages up to 120 chars, but i boosted that up to 1,000 chars. If the length of the message is longer than that, sqlalchemy will throw an error. I fixed this by catching the error, rolling back the db session, and sending an error message to the database saying the user's message failed to send.
 
 2. Another known issue was having usernames be displayed next to the messages. I solved this by using each connection's socketio SID instead of custom names and hardcoding them into the database add command.
 
@@ -98,4 +98,8 @@ If that doesn't work, remove the 'PGUSER=<user>' from the command and try again.
 
 # Improvements
 
-1. One improvement I would make would be to figure out how to allow for custom usernames when the user connects to the app. I believe I would go about it by creating another .jsx file for making a log in screen of sorts. Then I would take that input, redirect to the actual chatbox page, and match that input to each SID in a dictionary. Then, when a person sends a message, I would grab the corresponding username, and send it with the message.
+1. One improvement I would make would be to figure out how to allow for custom usernames when the user connects to the app. I believe I would go about it by creating another .jsx file for making a log in screen of sorts. Then I would take that input, redirect to the actual chatbox page, and match that input to each SID in a dictionary. Then, when a person sends a message, I would grab the corresponding username, and send it to the DB with the message.
+
+2. Another improvement I would make would be having a box on the right side of the chatbox listing all the current users. I would have to create another div in the chatbox area, emit the array of SIDs to content, and map the contents out like with the messages.
+
+3. Another improvement I would make would be 
