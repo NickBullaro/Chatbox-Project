@@ -6,7 +6,7 @@ import { Button } from './Button';
 import { Socket } from './Socket';
 
 export function Content() {
-    const [users, setUsers] = React.useState([]);
+    const [users, setUsers] = React.useState('');
     const [messages, setMessages] = React.useState([]);
     
     function getNewMessage() {
@@ -20,9 +20,9 @@ export function Content() {
     
     function getNewuser() {
         React.useEffect(() => {
-            Socket.on('new user', updateUsers);
+            Socket.on('users received', updateUsers);
             return () => {
-                Socket.off('new user', updateUsers);
+                Socket.off('users received', updateUsers);
             }
         });
     }
@@ -34,9 +34,9 @@ export function Content() {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
     
-    function updateUsers(connected) {
-        console.log('Received new sid: ' + connected['allUsers']);
-        setUsers(connected['allUsers']);
+    function updateUsers(data) {
+        console.log('Received new sid: ' + data['all_users']);
+        setUsers(data['all_users']);
     }
     
     getNewuser();
@@ -54,6 +54,7 @@ export function Content() {
                     }
                 </ul>
             <Button />
+            <h2 class="users">Total users: {users}</h2>
         </div>
     );
 }

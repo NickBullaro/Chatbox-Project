@@ -10,6 +10,7 @@ import bot
 
 
 MESSAGES_RECEIVED_CHANNEL = 'messages received'
+USERS_RECEIVED_CHANNEL = 'users received'
 
 app = flask.Flask(__name__)
 
@@ -49,6 +50,14 @@ def parseM(data):
 
 connected = []
 
+
+def emit_all_users(channel):
+    all_users = len(connected)
+    
+    socketio.emit(channel, {
+        'all_users': all_users
+    })
+
 def emit_all_messages(channel):
     all_messages = [ 
         db_message.message for db_message in \
@@ -67,7 +76,7 @@ def on_connect():
     })
     print(connected)
     
-    
+    emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
     
 
@@ -76,6 +85,7 @@ def on_disconnect():
     print ('Someone disconnected!')
     connected.remove(request.sid)
     print(connected)
+    emit_all_users(USERS_RECEIVED_CHANNEL)
 
 
 @socketio.on('new message input')
@@ -89,10 +99,12 @@ def on_new_message(data):
         db.session.add(models.Messages("Chatbot: " + output));
         db.session.commit();
     
+    emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
 @app.route('/')
 def index():
+    emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
     return flask.render_template("index.html")

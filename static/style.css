@@ -53,3 +53,15 @@ li {
     height: 100%;
     width: 5%;
 }
+
+.users {
+    width: 10%;
+    position: absolute;
+    left: 35%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    font-size: 20pt;
+    border: 3px solid white;
+}
