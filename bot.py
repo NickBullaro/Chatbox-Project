@@ -22,7 +22,7 @@ def switch(arg):
     elif command == "date":
         return dat()
     elif command == "joke":
-        return "TODO"
+        return joke()
     else:
         return "Invalid command! Enter '!! help' to see available commands!"
 
@@ -46,3 +46,17 @@ def dat():
     today = date.today()
     d = "Today's date is " + str(today)
     return d
+    
+    
+def joke():
+
+    url = "https://joke3.p.rapidapi.com/v1/joke"
+
+    headers = {
+        'x-rapidapi-host': "joke3.p.rapidapi.com",
+        'x-rapidapi-key': "6bd46d61f2mshd2c80482e12a730p16f242jsn3b38dc8f3fb4",
+        }
+    
+    response = requests.request("GET", url, headers=headers)
+    
+    return response.text
