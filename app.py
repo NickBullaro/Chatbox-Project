@@ -93,11 +93,15 @@ def on_disconnect():
 def on_new_message(data):
     print("Got an event for new message input with data:", data)
     output = parseM(data)# send output
-    
-    db.session.add(models.Messages(request.sid + ": " + data["message"]));
-    db.session.commit();
-    if output:
-        db.session.add(models.Messages("Awesome Bot: " + output));
+    try:
+        db.session.add(models.Messages(request.sid + ": " + data["message"]));
+        db.session.commit();
+        if output:
+            db.session.add(models.Messages("Awesome Bot: " + output));
+            db.session.commit();
+    except Exception as error:
+        db.session.rollback();
+        db.session.add(models.Messages("ERROR: User " + request.sid + "'s message has failed to send! Please try again!"));
         db.session.commit();
     
     emit_all_users(USERS_RECEIVED_CHANNEL)

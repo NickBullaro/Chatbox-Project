@@ -1,16 +1,18 @@
 # Set up React  
-0. `cd ~/environment && git clone https://github.com/Sresht/lect11-starter/ && cd lect11`    
+0. `cd ~/environment && git clone https://github.com/NJIT-CS490/project2-m1-nsb38 && cd project2-m1-nsb38`    
 1. Install your stuff!    
   a) `npm install`    
   b) `pip install flask-socketio`    
   c) `pip install eventlet`    
   d) `npm install -g webpack`    
   e) `npm install --save-dev webpack`    
-  f) `npm install socket.io-client --save`    
+  f) `npm install socket.io-client --save`
+  g) `pip install flask`
+  h) `pip install python-dotenv`
+  i) `npm install -g heroku`
 :warning: :warning: :warning: If you see any error messages, make sure you use `sudo pip` or `sudo npm`. If it says "pip cannot be found", run `which pip` and use `sudo [path to pip from which pip] install` :warning: :warning: :warning:    
-2. If you already have psql set up, **SKIP THE REST OF THE STEPS AND JUST DO THE FOLLOWING COMMAND**:   
-`sudo service postgresql start`    
-3. Copy your `sql.env` file into your new directory.
+2. If you already have psql set up, **SKIP THE REST OF THE STEPS AND JUST DO THE FOLLOWING COMMAND**: `sudo service postgresql start`    
+3. Create your `sql.env`.
   
 # Getting PSQL to work with Python  
   
@@ -39,11 +41,15 @@
     b) I recommend 4-5 characters - it doesn't have to be very secure. Remember this password!  
         `create user [some_username_here] superuser password '[some_unique_new_password_here]';`    
     c) `\q` to quit out of sql    
-8. `cd` into `lect11` and make a new file called `sql.env` and add `SQL_USER=` and `SQL_PASSWORD=` in it  
-9. Fill in those values with the values you put in 7. b)  
+8. `cd` into `project2-m1-nsb38` and make a new file called `sql.env`.
+9. Add the following lines into it:
+  a) SQL_USER='<user>' where <user> is the username you used in step 7b.
+  b) SQL_PASSWORD='<pass>' where <pass> is the password you used in step 7b.
+  c) `DATABASE_URL='postgresql://<user>:<pass>@localhost/postgres'` where <user> and <pass> are the values from previous steps.
   
   
-# Enabling read/write from SQLAlchemy  
+# Enabling read/write from SQLAlchemy
+
 There's a special file that you need to enable your db admin password to work for:  
 1. Open the file in vim: `sudo vim /var/lib/pgsql9/data/pg_hba.conf`
 If that doesn't work: `sudo vim $(psql -c "show hba_file;" | grep pg_hba.conf)`  
@@ -54,3 +60,37 @@ If that doesn't work: `sudo vim $(psql -c "show hba_file;" | grep pg_hba.conf)`
   a) `npm run watch`. If prompted to install webpack-cli, type "yes"    
   b) In a new terminal, `python app.py`    
   c) Preview Running Application (might have to clear your cache by doing a hard refresh)    
+
+
+# Setting up Heroku and pushing your database to it
+
+1. Log into heroku: `heroku login -i`
+2. Create a new Heroku app: `heroku create`
+3. Create Herkou postgresql: `heroku addons:create heroku-postgresql:hobby-dev`
+4. Follow these steps to alter the table owner:
+  a) Enter `psql` in the terminal
+  b) Enter `ALTER DATABASE postgres OWNER TO <user>` where <user> is your username from 7b
+  c) A message should pop up saying 'ALTER DATABASE' if it worked.
+  d) Next, enter `\l` and you should see your user in the Owner column next to postgres.
+4. Push your local database to Heroku: `PGUSER=<user> heroku pg:push postgres DATABASE_URL` where <user> is the same as in your DATABASE_URL in sql.env.
+If that doesn't work, remove the 'PGUSER=<user>' from the command and try again.
+5. Check to see if it worked: `heroku pg:psql` followed by `SELECT * FROM messages`. It should output a blank table with 2 columns.
+6. Configure your PROCFILE and requrements.txt to make sure you have everything you need to run the app.
+7. Push your app to Heroku: `git push heroku master`
+8. Navigate to your new Heroku app!
+
+
+
+
+# Known Issues
+1. One known issue is 
+
+2. Another known issue is 
+
+3. Another known issue is
+
+
+
+
+
+# Improvements
