@@ -68,3 +68,8 @@ li {
     font-size: 20pt;
     border: 3px solid white;
 }
+
+.bot {
+    font-weight: bold;
+    color: yellow;
+}

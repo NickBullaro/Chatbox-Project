@@ -6,6 +6,7 @@ class Bot():
     def __init__(self):
         self.message = ''
         self.commands = 'about, help, funtranslate <message>, date, joke'
+        self.helpString = ''
         self.ft_message = ''
         self.date = ''
         self.rand_joke = ''
@@ -13,11 +14,12 @@ class Bot():
     
     
     def about(self):
-        self.message = "I am Awesome Bot! I can translate any sentence you want into leetspeak!"
+        self.message = "I am Awesome Bot! I can translate any sentence you want into leetspeak! I can also tell you a random joke and today's date! Aren't I awesome?"
         return self.message
         
     def helper(self):
-        return self.commands
+        self.helpString = 'These are the commands I currently understand: ' + self.commands + '   -REMEMBER- each command but begin with "!! " or else I wont understand you! ex: "!! joke"'
+        return self.helpString
         
     def funtranslate(self, text):
         base = "https://api.funtranslations.com/translate/leetspeak.json?text=" + text
@@ -50,7 +52,7 @@ def switch(arg):
     command = arg[1]
     if command == "funtranslate":
         if len(arg) < 3:
-            return "You forgot to enter what you wanted me to translate you silly goose!"
+            return "You forgot to enter what you wanted me to translate ya goof!"
         text = arg[2:]
         t = ' '.join(text)
         return bot.funtranslate(t)

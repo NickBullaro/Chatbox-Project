@@ -64,42 +64,47 @@ If that doesn't work: `sudo vim $(psql -c "show hba_file;" | grep pg_hba.conf)`
 
 # Setting up Heroku and pushing your database to it
 
-1. Log into heroku: `heroku login -i`
-2. Create a new Heroku app: `heroku create`
-3. Create Herkou postgresql: `heroku addons:create heroku-postgresql:hobby-dev`
-4. Follow these steps to alter the table owner:
+1. Create a heroku account at heroku.com
+2. Log into heroku: `heroku login -i`
+3. Create a new Heroku app: `heroku create`
+4. Create Herkou postgresql: `heroku addons:create heroku-postgresql:hobby-dev`
+5. Follow these steps to alter the table owner:
   a) Enter `psql` in the terminal
   b) Enter `ALTER DATABASE postgres OWNER TO <user>` where <user> is your username from 7b
   c) A message should pop up saying 'ALTER DATABASE' if it worked.
   d) Next, enter `\l` and you should see your user in the Owner column next to postgres.
-4. Push your local database to Heroku: `PGUSER=<user> heroku pg:push postgres DATABASE_URL` where <user> is the same as in your DATABASE_URL in sql.env.
+6. Push your local database to Heroku: `PGUSER=<user> heroku pg:push postgres DATABASE_URL` where <user> is the same as in your DATABASE_URL in sql.env.
 If that doesn't work, remove the 'PGUSER=<user>' from the command and try again.
-5. Check to see if it worked: `heroku pg:psql` followed by `SELECT * FROM messages`. It should output a blank table with 2 columns.
-6. Configure your PROCFILE and requrements.txt to make sure you have everything you need to run the app.
-7. Push your app to Heroku: `git push heroku master`
-8. Navigate to your new Heroku app!
+7. Check to see if it worked: `heroku pg:psql` followed by `SELECT * FROM messages`. It should output a blank table with 2 columns.
+8. Configure your PROCFILE and requrements.txt to make sure you have everything you need to run the app.
+9. Push your app to Heroku: `git push heroku master`
+10. Navigate to your new Heroku app!
 
 
+
+
+# Technical Issues
+
+1. One technical issue I ran into during this project was the length of the messages. The database was originally set up to allow messages up to 120 chars, but i boosted that up to 1,000 chars. If the length of the message is longer than that, sqlalchemy will throw an error. I fixed this by catching the error, rolling back the db session, and sending an error message to the database saying the user's message failed to send.
+
+2. Another technical issue was having custom usernames be displayed next to the messages. I couldn't think of a way that could allow for this without a login page and new columns in the DB, and I saw the professor say we can just use the SIDs for m1, so I decided to do that for now. So I went about this by using each connection's socketio SID instead of custom names and hardcoding them into the database add command.
+
+3. Another technical issue was pushing my database to heroku. Like many others, when i tried to run the pg:push command, it gave me a peer authentication error. Luckily, the solution to this problem was posted on Slack and in the class FAQ which helped me solve the issue.
+
+4. Another technical issue was having the current user count update automatically when someone connected or disconnected. I solved this by making an emit_all_users function like the emit_all_messages function in app.py and calling it when needed. I also had to add the react hook in Content.jsx which I did by copying what we did for the messages but with users instead.
+
+5. Another technical issue was once I made the chatbox scrollable, I needed to find out how to make the chatbox always stay scrolled all the way down when a new message was sent. I couldn't do this in the html so I looked it up and found some Javascript code that worked. Using this link, https://collaborate.pega.com/question/how-keep-scrollbar-always-bottom, I found out I needed to set the <ul> as a new variable in my updateMessages funtion in Content.jsx and set the scrollTop equal to the scrollHeight.
 
 
 # Known Issues
 
-1. One known issue with this project was the length of the messages. The databasewas originally set up to allow messages up to 120 chars, but i boosted that up to 1,000 chars. If the length of the message is longer than that, sqlalchemy will throw an error. I fixed this by catching the error, rolling back the db session, and sending an error message to the database saying the user's message failed to send.
-
-2. Another known issue was having usernames be displayed next to the messages. I solved this by using each connection's socketio SID instead of custom names and hardcoding them into the database add command.
-
-3. Another known issue is 
-
-4. Another known issue is 
-
-5. Another known issue is 
-
+1. I would say the one known issue I have is the lack of styling for users vs. the bot. I have it set up so the messages are sent to the DB with the .add function passing this: (the SID + data["messages"]). So, because of that, there really isn't a way for my program to discern between bot messages and user messages.
 
 
 # Improvements
 
-1. One improvement I would make would be to figure out how to allow for custom usernames when the user connects to the app. I believe I would go about it by creating another .jsx file for making a log in screen of sorts. Then I would take that input, redirect to the actual chatbox page, and match that input to each SID in a dictionary. Then, when a person sends a message, I would grab the corresponding username, and send it to the DB with the message.
+1. One improvement I would make would be to figure out how to allow for custom usernames when the user connects to the app. I believe I would go about it by creating another .jsx file for making a login screen of sorts. Then I would take that input, redirect to the actual chatbox page, and match that input to each SID in a dictionary like I did with the SIDs in app.py. Then, when a person sends a message, I would grab the corresponding username, and send it to the DB with the message.
 
-2. Another improvement I would make would be having a box on the right side of the chatbox listing all the current users. I would have to create another div in the chatbox area, emit the array of SIDs to content, and map the contents out like with the messages.
+2. Another improvement I would make would be having a box on the right side of the chatbox listing all the current users. I would have to create another div in the chatbox area, emit the array of SIDs (or usernames if I implemented that) to Content.jsx, and map the contents out like with the messages.
 
-3. Another improvement I would make would be 
+3. Another improvement I would make would be to add more functionality to the bot. I would want it to be more like a discord bot where it can do a lot more things like play music or have responses to other things like "how are you?". This would mainly be implemented through using other APIs. I would implement the other responses by creating a dictionary with pairs of questions and responses- for example {"how are you?": "I am well. How are you?"}, and parse the messages for the key, then reply with the value.

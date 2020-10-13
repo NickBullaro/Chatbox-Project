@@ -97,7 +97,7 @@ def on_new_message(data):
         db.session.add(models.Messages(request.sid + ": " + data["message"]));
         db.session.commit();
         if output:# If there is a bot response
-            db.session.add(models.Messages("Awesome Bot: " + output));
+            db.session.add(models.Messages('Awesome Bot: ' + output));
             db.session.commit();
     except Exception as error:# If there is an error like message is too long.
         db.session.rollback();
