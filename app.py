@@ -47,7 +47,7 @@ def parseM(data):
     
 
 
-connected = []# Array to store the sid's of users for naming purposes
+connected = []
 
 
 def emit_all_users(channel):
@@ -92,14 +92,14 @@ def on_disconnect():
 @socketio.on('new message input')
 def on_new_message(data):
     print("Got an event for new message input with data:", data)
-    output = parseM(data)# Save output for sending bot response to DB
+    output = parseM(data)
     try:
         db.session.add(models.Messages(request.sid + ": " + data["message"]));
         db.session.commit();
-        if output:# If there is a bot response
+        if output:
             db.session.add(models.Messages('Awesome Bot: ' + output));
             db.session.commit();
-    except Exception as error:# If there is an error like message is too long.
+    except Exception as error:
         db.session.rollback();
         db.session.add(models.Messages("ERROR: User " + request.sid + "'s message has failed to send! Please try again!"));
         db.session.commit();
