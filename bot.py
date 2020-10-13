@@ -18,7 +18,7 @@ class Bot():
         return self.message
         
     def helper(self):
-        self.helpString = 'These are the commands I currently understand: ' + self.commands + '   -REMEMBER- each command but begin with "!! " or else I wont understand you! ex: "!! joke"'
+        self.helpString = 'These are the commands I currently understand: ' + self.commands + '.    -REMEMBER- each command but begin with "!! " or else I wont understand you! ex: "!! joke"'
         return self.helpString
         
     def funtranslate(self, text):
