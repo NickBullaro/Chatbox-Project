@@ -1,7 +1,6 @@
     
 import * as React from 'react';
 
-
 import { Button } from './Button';
 import { Socket } from './Socket';
 
@@ -45,7 +44,7 @@ export function Content() {
 
     
     return (
-        <div class="chatbox">
+        <div className="chatbox">
             <h1>Messages!</h1>
                 <ul id="box">
                     {
@@ -54,7 +53,7 @@ export function Content() {
                     }
                 </ul>
             <Button />
-            <h2 class="users">Total users: {users}</h2>
+            <h2 className="users">Total users: {users}</h2>
         </div>
     );
 }

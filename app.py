@@ -47,7 +47,7 @@ def parseM(data):
     
 
 
-connected = []
+connected = {}
 
 
 def emit_all_users(channel):
@@ -71,7 +71,6 @@ def emit_all_messages(channel):
 @socketio.on('connect')
 def on_connect():
     print('Someone connected!')
-    connected.append(request.sid)
     socketio.emit('connected', {
         'test': 'connected'
     })
@@ -84,9 +83,17 @@ def on_connect():
 @socketio.on('disconnect')
 def on_disconnect():
     print ('Someone disconnected!')
-    connected.remove(request.sid)
+    del (connected[request.sid])
     print(connected)
     emit_all_users(USERS_RECEIVED_CHANNEL)
+    
+@socketio.on('new google user')
+def on_login(data):
+    print('New login from user:', data['name'])
+    connected[request.sid] = data['name']
+    
+    emit_all_users(USERS_RECEIVED_CHANNEL)
+    emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
 
 @socketio.on('new message input')
