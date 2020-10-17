@@ -32,7 +32,7 @@ export function GoogleButton() {
     return (
         <div id="joinInnerContainer">
                 <GoogleLogin
-                clientId="757847605849-7vlkasb74m9tjh95b3p6n1it3387u7th.apps.googleusercontent.com"
+                clientId="757847605849-401dq9gm4eb7v6smir1e2nfn64nc9ad6.apps.googleusercontent.com"
                 buttonText="Login"
                 onSuccess={handleSubmit}
                 onFailure={responseGoogle}
