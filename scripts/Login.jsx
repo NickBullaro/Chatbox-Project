@@ -11,9 +11,9 @@ export function Login() {
     
     
     return (
-    <div class="joinOuterContainer">
-        <div class="joinInnerContainer">
-        <h3 class="heading">Sign in with Google to continue!</h3>
+    <div className="joinOuterContainer">
+        <div className="joinInnerContainer">
+        <h3 className="heading">Sign in with Google to continue!</h3>
             <GoogleButton/>
         </div>
     </div>

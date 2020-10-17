@@ -11,16 +11,21 @@ const responseGoogle = (response) => {
 }
 
 function handleSubmit(response) {
+    console.log(response.profileObj)
     console.log(response.profileObj.name);
     console.log(response.profileObj.email);
-    let name = response.profileObj.name;
+    let user = response.profileObj.name;
     let email = response.profileObj.email;
+    let pic = response.profileObj.imageUrl;
     Socket.emit('new google user', {
-        'name': name,
-        'email': email
+        'user': user,
+        'email': email,
+        'pic': pic
     });
     
-    console.log('Sent the name ' + name + ' to server!');
+    console.log('Sent the name ' + user + ' to server!');
+    console.log('Sent the email ' + email + ' to server!');
+    console.log('Sent the pic ' + pic + ' to server!');
     ReactDOM.render(<Content/>, document.getElementById('content'));
 }
 

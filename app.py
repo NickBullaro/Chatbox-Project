@@ -51,7 +51,9 @@ connected = {}
 
 
 def emit_all_users(channel):
-    all_users = len(connected)
+    all_users = [ 
+        db_user.user for db_user in \
+        db.session.query(models.user_info).all()]
     
     socketio.emit(channel, {
         'all_users': all_users
@@ -89,8 +91,14 @@ def on_disconnect():
     
 @socketio.on('new google user')
 def on_login(data):
-    print('New login from user:', data['name'])
-    connected[request.sid] = data['name']
+    print('New login from user:', data['user'])
+    print(data)
+    
+    try:
+        db.session.add(models.user_info(data['email'], data['user'], data['pic'], data['message_id']));
+        db.session.commit();
+    except Exception as error:
+        print("User already in db")
     
     emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
