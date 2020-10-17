@@ -18,7 +18,7 @@ function handleSubmit(event) {
 
 export function Button() {
     return (
-        <form onSubmit={handleSubmit} className="button">
+        <form onSubmit={handleSubmit} className="submitButton">
             <input id="message_input" placeholder="Enter a message" className="input" autoComplete="off"></input>
             <button className="addButton">Chat!</button>
         </form>

@@ -39,7 +39,7 @@ li {
     font-size: 16pt;
 }
 
-.button {
+.submitButton {
     margin-top: 0px;
     height: 4%;
     width: auto;
@@ -72,4 +72,17 @@ li {
 .bot {
     font-weight: bold;
     color: yellow;
+}
+
+.joinOuterContainer {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 100vh;
+    align-items: center;
+    margin-left: 45%;
+}
+
+.button {
+    width: 20%;
 }

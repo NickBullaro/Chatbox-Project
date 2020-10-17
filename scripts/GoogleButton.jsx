@@ -30,12 +30,14 @@ function handleSubmit(response) {
 
 export function GoogleButton() {
     return (
+        <div id="joinInnerContainer">
                 <GoogleLogin
                 clientId="757847605849-7vlkasb74m9tjh95b3p6n1it3387u7th.apps.googleusercontent.com"
                 buttonText="Login"
                 onSuccess={handleSubmit}
                 onFailure={responseGoogle}
                 cookiePolicy={'single_host_origin'}/>
+        </div>
             );
 }
 

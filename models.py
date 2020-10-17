@@ -9,7 +9,9 @@ class Messages(db.Model):
     
     def __init__(self, a):
         self.message = a
+
         
     def __repr__(self):
         return '<message: %s>' % self.message
+        
 
