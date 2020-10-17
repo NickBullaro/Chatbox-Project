@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Button } from './Button';
 import { Socket } from './Socket';
+import Linkify from 'react-linkify';
 
 export function Content() {
     const [users, setUsers] = React.useState('');
@@ -43,16 +44,18 @@ export function Content() {
 
     
     return (
-        <div className="chatbox">
-            <h1>Messages!</h1>
-                <ul id="box">
-                    {
-                        messages.map((message, index) =>
-                        <li key={index}>{message}</li>)
-                    }
-                </ul>
-            <Button />
-            <h2 className="users">Total users: {users}</h2>
-        </div>
+        <Linkify>
+            <div className="chatbox">
+                <h1>Messages!</h1>
+                    <ul id="box">
+                        {
+                            messages.map((message, index) =>
+                            <li key={index}>{message}</li>)
+                        }
+                    </ul>
+                <Button />
+                <h2 className="users">Total users: {users}</h2>
+            </div>
+        </Linkify>
     );
 }
