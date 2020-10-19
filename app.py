@@ -39,7 +39,7 @@ db.session.commit()
 
 def parseM(data):
     words = data['message'].split()
-    print(words)
+    print("_", words)
     if(words[0] == "!!"):
         out = bot.switch(words)
         return out
@@ -50,11 +50,14 @@ def parseM(data):
 connected = {}
 
 
+
 def emit_all_users(channel):
-    all_users = [ 
-        db_user.user for db_user in \
-        db.session.query(models.user_info).all()]
-    
+    all_users = []
+    for k in connected:
+        all_users.append(connected[k])
+    #     db_user.user for db_user in \
+    #     db.session.query(models.user_info).all()]
+    print("-", all_users)
     socketio.emit(channel, {
         'all_users': all_users
     })
@@ -76,7 +79,7 @@ def on_connect():
     socketio.emit('connected', {
         'test': 'connected'
     })
-    print(connected)
+    print("..", connected)
     
     emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
@@ -86,18 +89,19 @@ def on_connect():
 def on_disconnect():
     print ('Someone disconnected!')
     del (connected[request.sid])
-    print(connected)
+    print("...", connected)
     emit_all_users(USERS_RECEIVED_CHANNEL)
     
 @socketio.on('new google user')
 def on_login(data):
     print('New login from user:', data['user'])
-    print(data)
+    connected[request.sid] = data['user']
     
     try:
-        db.session.add(models.user_info(data['email'], data['user'], data['pic'], data['message_id']));
+        db.session.add(models.user_info(data['email'], data['user'], data['pic']));
         db.session.commit();
     except Exception as error:
+        db.session.rollback();
         print("User already in db")
     
     emit_all_users(USERS_RECEIVED_CHANNEL)
@@ -108,15 +112,16 @@ def on_login(data):
 def on_new_message(data):
     print("Got an event for new message input with data:", data)
     output = parseM(data)
+    print(output)
     try:
-        db.session.add(models.Messages(request.sid + ": " + data["message"]));
+        db.session.add(models.Messages(connected[request.sid] + ": " + data["message"], db.session.query(models.user_info.id).filter(models.user_info.user==connected[request.sid]).first().id));
         db.session.commit();
         if output:
-            db.session.add(models.Messages('Awesome Bot: ' + output));
+            db.session.add(models.Messages('Awesome Bot: ' + output, db.session.query(models.user_info.id).filter(models.user_info.user=='Awesome Bot').first().id));
             db.session.commit();
     except Exception as error:
         db.session.rollback();
-        db.session.add(models.Messages("ERROR: User " + request.sid + "'s message has failed to send! Please try again!"));
+        db.session.add(models.Messages("ERROR: User " + connected[request.sid] + "'s message has failed to send! Please try again!", db.session.query(models.user_info.id).filter(models.user_info.user==connected[request.sid]).first().id));
         db.session.commit();
     
     emit_all_users(USERS_RECEIVED_CHANNEL)
@@ -125,6 +130,12 @@ def on_new_message(data):
 
 @app.route('/')
 def index():
+    try:
+        db.session.add(models.user_info('awesomebot@gmail.com', 'Awesome Bot', 'https://www.internetandtechnologylaw.com/files/2019/06/iStock-872962368-chat-bots-265x300.jpg'));
+        db.session.commit();
+    except Exception as error:
+        db.session.rollback();
+        print("User already in db")
     emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
