@@ -5,6 +5,7 @@ import { Socket } from './Socket';
 import Linkify from 'react-linkify';
 
 export function Content() {
+    const [user_count, setCount] = React.useState('')
     const [users, setUsers] = React.useState([]);
     const [messages, setMessages] = React.useState([]);
     
@@ -26,6 +27,15 @@ export function Content() {
         });
     }
     
+    function getNewCount() {
+        React.useEffect(() => {
+            Socket.on('count received', updateCount);
+            return () => {
+                Socket.off('count received', updateCount);
+            }
+        });
+    }
+    
     function updateMessages(data) {
         console.log("Received messages from server: " + data['allMessages']);
         setMessages(data['allMessages']);
@@ -38,7 +48,13 @@ export function Content() {
         setUsers(data['all_users']);
     }
     
+    function updateCount(data) {
+        console.log('Received new user: ' + data['user_count']);
+        setCount(data['user_count']);
+    }
+    
     getNewuser();
+    getNewCount();
     getNewMessage();
 
 
@@ -54,7 +70,7 @@ export function Content() {
                         }
                     </ul>
                 <Button />
-                <h2 className="users">Total users: {users}</h2>
+                <h2 className="users">Total users: {user_count}</h2>
                 <ul>
                         {
                             users.map((user, index) =>

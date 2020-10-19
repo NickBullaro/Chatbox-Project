@@ -12,6 +12,7 @@ import bot
 
 MESSAGES_RECEIVED_CHANNEL = 'messages received'
 USERS_RECEIVED_CHANNEL = 'users received'
+COUNT_RECEIVED_CHANNEL = 'count received'
 
 app = flask.Flask(__name__)
 
@@ -55,11 +56,17 @@ def emit_all_users(channel):
     all_users = []
     for k in connected:
         all_users.append(connected[k])
-    #     db_user.user for db_user in \
-    #     db.session.query(models.user_info).all()]
-    print("-", all_users)
+
     socketio.emit(channel, {
         'all_users': all_users
+    })
+    
+    
+def emit_user_count(channel):
+    user_count = len(connected)
+    
+    socketio.emit(channel, {
+        'user_count': user_count
     })
 
 
@@ -79,9 +86,9 @@ def on_connect():
     socketio.emit('connected', {
         'test': 'connected'
     })
-    print("..", connected)
     
     emit_all_users(USERS_RECEIVED_CHANNEL)
+    emit_user_count(COUNT_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
     
 
@@ -89,8 +96,8 @@ def on_connect():
 def on_disconnect():
     print ('Someone disconnected!')
     del (connected[request.sid])
-    print("...", connected)
     emit_all_users(USERS_RECEIVED_CHANNEL)
+    emit_user_count(COUNT_RECEIVED_CHANNEL)
     
 @socketio.on('new google user')
 def on_login(data):
@@ -105,6 +112,7 @@ def on_login(data):
         print("User already in db")
     
     emit_all_users(USERS_RECEIVED_CHANNEL)
+    emit_user_count(COUNT_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
 
@@ -124,7 +132,6 @@ def on_new_message(data):
         db.session.add(models.Messages("ERROR: User " + connected[request.sid] + "'s message has failed to send! Please try again!", db.session.query(models.user_info.id).filter(models.user_info.user==connected[request.sid]).first().id));
         db.session.commit();
     
-    emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
 
@@ -137,6 +144,7 @@ def index():
         db.session.rollback();
         print("User already in db")
     emit_all_users(USERS_RECEIVED_CHANNEL)
+    emit_user_count(COUNT_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
     return flask.render_template("index.html")
