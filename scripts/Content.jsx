@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Button } from './Button';
 import { Socket } from './Socket';
 import Linkify from 'react-linkify';
+import isImageUrl from 'is-image-url';
 
 export function Content() {
     const [user_count, setCount] = React.useState('')
@@ -37,7 +38,7 @@ export function Content() {
     }
     
     function updateMessages(data) {
-        //console.log("Received messages from server: " + data['allMessages']);
+        console.log("Received messages from server: " + data['allMessages']);
 
         setMessages(data['allMessages']);
         let chatBox = document.getElementById("box");
@@ -66,8 +67,12 @@ export function Content() {
                 <h1>Messages!</h1>
                     <ul id="box">
                         {
-                            messages.map((message, index) =>
-                            <li id="mess" key={index}>{message}</li>)
+                            messages.map((message, index) => {
+                                isImageUrl(message) ?
+                                    <li key={index}>--<img src={message}/></li>
+                                    :
+                                    <li id="mess" key={index}>__{message}</li>;
+                            })
                         }
                     </ul>
                     <ul className="userList">

@@ -12,6 +12,7 @@
   i) `npm install -g heroku`
   j) `npm i react-google-login`
   k) `npm i react-linkify`
+  l) `npm i is-image-url`
 :warning: :warning: :warning: If you see any error messages, make sure you use `sudo pip` or `sudo npm`. If it says "pip cannot be found", run `which pip` and use `sudo [path to pip from which pip] install` :warning: :warning: :warning:    
 2. If you already have psql set up, **SKIP THE REST OF THE STEPS AND JUST DO THE FOLLOWING COMMAND**: `sudo service postgresql start`    
 3. Create your `sql.env`.
@@ -43,13 +44,31 @@
     b) I recommend 4-5 characters - it doesn't have to be very secure. Remember this password!  
         `create user [some_username_here] superuser password '[some_unique_new_password_here]';`    
     c) `\q` to quit out of sql    
-8. `cd` into `project2-m1-nsb38` and make a new file called `sql.env`.
+8. `cd` into `project2-m2-nsb38` and make a new file called `sql.env`.
 9. Add the following lines into it:
   a) SQL_USER='<user>' where <user> is the username you used in step 7b.
   b) SQL_PASSWORD='<pass>' where <pass> is the password you used in step 7b.
   c) `DATABASE_URL='postgresql://<user>:<pass>@localhost/postgres'` where <user> and <pass> are the values from previous steps.
   
   
+# Seting up OAuth with Google
+
+1. Go to `https://console.developers.google.com/`` and sign up using your google account.  
+2. Click "CREATE PROJECT" or in the dropdown menu called "Select a Project" in the top, click "NEW PROJECT".   
+3. Make a new project named whatever you like. It is okay if you choose "No organization".
+4. Click "Credentials" in the left hand bar, then click "+ CREATE CREDENTIALS" and then click "OAuth client ID".  
+4.5. If you see a warning that says "To create an OAuth client ID, you must first set a product name on the consent screen", do the following steps:  
+			1. Click the "CONFIGURE CONSENT SCREEN" button.  
+			2. Choose "External"  
+			3. For "Application name," specify "Chatbox Program" or something similar.  
+			4. Press save.  
+5. Go back to Credentials -> Create Credentials -> OAuth client ID. Click "web application". Enter a name for your application.
+6. In the 'Authorized Javascript Origins' section, enter your full AWS Cloud9 preview url  :warning: You must leave out the '/' at the end of the link or it will not work! :warning:
+7. Once you finish and save, a popup will appear with your ClientID and your client secret. You need your clientID for the next part, however it is saved in your credentials tab in the Google Developer Console if you lose or forget it.
+8. Once you have your clientID, open GoogleButton.jsx and replace the clientID string value with your own clientID.
+
+
+
 # Enabling read/write from SQLAlchemy
 
 There's a special file that you need to enable your db admin password to work for:  
@@ -63,7 +82,7 @@ If that doesn't work: `sudo vim $(psql -c "show hba_file;" | grep pg_hba.conf)`
     b) `import models`
     c) `models.db.create_all()`
     d) `quit()`
-5. Run your code!    
+6. Run your code!    
   a) `npm run watch`. If prompted to install webpack-cli, type "yes"    
   b) In a new terminal, `python app.py`    
   c) Preview Running Application (might have to clear your cache by doing a hard refresh)    
