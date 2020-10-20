@@ -120,7 +120,6 @@ def on_login(data):
 def on_new_message(data):
     print("Got an event for new message input with data:", data)
     output = parseM(data)
-    print(output)
     try:
         db.session.add(models.Messages(connected[request.sid] + ": " + data["message"], db.session.query(models.user_info.id).filter(models.user_info.user==connected[request.sid]).first().id));
         db.session.commit();

@@ -37,7 +37,8 @@ export function Content() {
     }
     
     function updateMessages(data) {
-        console.log("Received messages from server: " + data['allMessages']);
+        //console.log("Received messages from server: " + data['allMessages']);
+
         setMessages(data['allMessages']);
         let chatBox = document.getElementById("box");
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -66,18 +67,18 @@ export function Content() {
                     <ul id="box">
                         {
                             messages.map((message, index) =>
-                            <li key={index}>{message}</li>)
+                            <li id="mess" key={index}>{message}</li>)
                         }
                     </ul>
-                <Button />
-                <h2 className="users">Total users: {user_count}</h2>
-                <ul>
+                    <ul className="userList">
                         {
                             users.map((user, index) =>
                             <li key={index}>{user}</li>)
                         }
-                </ul>
+                    </ul>
             </div>
+            <Button />
+            <h2 className="users">Total users: {user_count}</h2>
         </Linkify>
     );
 }
