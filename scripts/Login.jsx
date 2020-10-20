@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Link from 'react-router-dom';
 
 import { GoogleButton } from './GoogleButton';
 import { Socket } from './Socket';

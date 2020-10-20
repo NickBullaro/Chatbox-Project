@@ -10,6 +10,8 @@
   g) `pip install flask`
   h) `pip install python-dotenv`
   i) `npm install -g heroku`
+  j) `npm i react-google-login`
+  k) `npm i react-linkify`
 :warning: :warning: :warning: If you see any error messages, make sure you use `sudo pip` or `sudo npm`. If it says "pip cannot be found", run `which pip` and use `sudo [path to pip from which pip] install` :warning: :warning: :warning:    
 2. If you already have psql set up, **SKIP THE REST OF THE STEPS AND JUST DO THE FOLLOWING COMMAND**: `sudo service postgresql start`    
 3. Create your `sql.env`.
@@ -55,7 +57,12 @@ There's a special file that you need to enable your db admin password to work fo
 If that doesn't work: `sudo vim $(psql -c "show hba_file;" | grep pg_hba.conf)`  
 2. Replace all values of `ident` with `md5` in Vim: `:%s/ident/md5/g`  
 3. After changing those lines, run `sudo service postgresql restart`  
-4. Ensure that `sql.env` has the username/password of the superuser you created!  
+4. Ensure that `sql.env` has the username/password of the superuser you created!
+5. Now create the needed database tables- in the terminal enter:
+    a) `psql`
+    b) `import models`
+    c) `models.db.create_all()`
+    d) `quit()`
 5. Run your code!    
   a) `npm run watch`. If prompted to install webpack-cli, type "yes"    
   b) In a new terminal, `python app.py`    
@@ -108,3 +115,19 @@ If that doesn't work, remove the 'PGUSER=<user>' from the command and try again.
 2. Another improvement I would make would be having a box on the right side of the chatbox listing all the current users. I would have to create another div in the chatbox area, emit the array of SIDs (or usernames if I implemented that) to Content.jsx, and map the contents out like with the messages.
 
 3. Another improvement I would make would be to add more functionality to the bot. I would want it to be more like a discord bot where it can do a lot more things like play music or have responses to other things like "how are you?". This would mainly be implemented through using other APIs. I would implement the other responses by creating a dictionary with pairs of questions and responses- for example {"how are you?": "I am well. How are you?"}, and parse the messages for the key, then reply with the value.
+
+
+
+
+# --- Milestone 2: ---
+
+
+# Technical Issues
+1. One technical issue I ran into during this milestone was setting up the foreign key connection between the user's id and the messages. After some research, I found an example of how to set up a variable as a foreign key and how to use it in my app.py by using db.session.query().filter().
+
+2. Another technical issue I ran into was how to redirect to <Content /> after the login. I figured out that all I had to do was add a ReactDOM.render call in the handleSubmit function in GoogleButton.jsx. This made it so that after the google auth was finished, it rendered <Content /> which is the main chatbox file.
+
+# Improvements
+1. One improvement I would make would be to figure out how to render images inline. I created a regex test to see if a message had an image link in it, but I couldn't figure out how to actually embed that link as an image and render it inline.
+
+2. Another improvement I would make would be to have different styling for user messages and bot messages. I heard one way to go about it would be to create a sort of role for users and a role for the bot and send it with each message, then check the role in the message component and change the styling from there. However, I don't know exactly how I would go about that but that's why we use Google.
