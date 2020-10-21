@@ -43,7 +43,7 @@
     b) I recommend 4-5 characters - it doesn't have to be very secure. Remember this password!  
         `create user [some_username_here] superuser password '[some_unique_new_password_here]';`    
     c) `\q` to quit out of sql    
-8. `cd` into `project2-m2-nsb38` and make a new file called `sql.env`.
+8. `cd` into `project2-m3-nsb38` and make a new file called `sql.env`.
 9. Add the following lines into it:
   a) SQL_USER='<user>' where <user> is the username you used in step 7b.
   b) SQL_PASSWORD='<pass>' where <pass> is the password you used in step 7b.
@@ -153,3 +153,14 @@ If that doesn't work, remove the 'PGUSER=<user>' from the command and try again.
 1. One improvement I would make would be to figure out how to render images inline. I created a regex test to see if a message had an image link in it, but I couldn't figure out how to actually embed that link as an image and render it inline.
 
 2. Another improvement I would make would be to have different styling for user messages and bot messages. I heard one way to go about it would be to create a sort of role for users and a role for the bot and send it with each message, then check the role in the message component and change the styling from there. However, I don't know exactly how I would go about that but that's why we use Google.
+ 
+
+
+# --- Milestone 3: ---
+
+
+# Technical Issues
+
+
+
+# Improvements
