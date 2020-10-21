@@ -3,21 +3,6 @@ import { Socket } from './Socket';
 
 function handleSubmit(event) {
     let newMessage = document.getElementById("message_input");
-    let reg = new RegExp('(https?:\/\/[^ ]*\.(?:gif|png|jpg|jpeg))');
-    let st = newMessage.value;
-    let ans = reg.test(st);
-    console.log(ans);
-    if (ans == true) {
-        let img = document.createElement('img');
-        img.src = st;
-        //newMessage.value = "<img src='" + st + "' />";
-        document.getElementById('box').appendChild(img);
-        console.log("hi");
-        event.preventDefault();
-    }
-
-    
-    
     
     Socket.emit('new message input', {
         'message': newMessage.value
