@@ -13,29 +13,77 @@ KEY_EXPECTED = "expected"
 KEY_LENGTH = "length"
 KEY_FIRST_WORD = "first_word"
 KEY_SECOND_WORD = "second_word"
+botty = bot.Bot()
 
 
-
-class logicalTestCase(unittest.TestCase):
+class parsingLogicTestCase(unittest.TestCase):
     def setUp(self):
-        self.bot_success_test_params = [
+        # self.bot_success_test_params = [
+        #     {
+        #         KEY_INPUT: botty.message,
+        #         KEY_EXPECTED: ""
+        #     },
+        #     {
+        #         KEY_INPUT: botty.commands,
+        #         KEY_EXPECTED: "about, help, funtranslate <message>, date, joke"
+        #     },
+        #     {
+        #         KEY_INPUT: botty.helpString,
+        #         KEY_EXPECTED: ""
+        #     },
+        #     {
+        #         KEY_INPUT: botty.ft_message,
+        #         KEY_EXPECTED: ""
+        #     },
+        #     {
+        #         KEY_INPUT: botty.date,
+        #         KEY_EXPECTED: ""
+        #     },
+        #     {
+        #         KEY_INPUT: botty.rand_joke,
+        #         KEY_EXPECTED: ""
+        #     },
+        # ]
+        self.bot_about_success_test_params = [
             {
                 KEY_INPUT: "!! about",
-                KEY_EXPECTED: "I am Awesome Bot! I can translate any sentence you want into leetspeak! I can also tell you a random joke and today's date! Aren't I awesome?"
-            },
-            {
-                KEY_INPUT: "!! help",
-                KEY_EXPECTED: 'These are the commands I currently understand: about, help, funtranslate <message>, date, joke.    -REMEMBER- each command but begin with "!! " or else I wont understand you! ex: "!! joke"'
+                KEY_EXPECTED: {
+                    KEY_MESSAGE: "I am Awesome Bot! I can translate any sentence you want into leetspeak! I can also tell you a random joke and today's date! Aren't I awesome?"
+                    }
             }
         ]
-        
-    def test_parse_message_success(self):
-        for test in self.bot_success_test_params:
+        self.bot_help_success_test_params = [
+            {
+                KEY_INPUT: "!! help",
+                KEY_EXPECTED: {
+                    KEY_MESSAGE: 'These are the commands I currently understand: about, help, funtranslate <message>, date, joke.    -REMEMBER- each command but begin with "!! " or else I wont understand you! ex: "!! joke"'
+                    }
+            },
+        ]
+    
+    # def test_bot_success(self):
+    #     for test in self.bot_about_success_test_params:
+    #         response = test[KEY_INPUT]
+    #         expected = test[KEY_EXPECTED]
+            
+    #         self.assertEqual(response[KEY_MESSAGE], expected[KEY_MESSAGE])
+    #         # Alternatively (and preferably), you can do self.assertDictEqual(response, expected)
+
+    def test_about_success(self):
+        for test in self.bot_about_success_test_params:
+            response = bot.switch(test[KEY_INPUT])
+            expected = test[KEY_EXPECTED]
+            
+            self.assertEqual(response[KEY_MESSAGE], expected[KEY_MESSAGE])
+            # Alternatively (and preferably), you can do self.assertDictEqual(response, expected)
+
+    def test_help_success(self):
+        for test in self.bot_help_success_test_params:
             response = bot.switch(test[KEY_INPUT])
             expected = test[KEY_EXPECTED]
             
             self.assertEqual(response, expected)
             # Alternatively (and preferably), you can do self.assertDictEqual(response, expected)
-        
+
 if __name__ == '__main__':
     unittest.main()

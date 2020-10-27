@@ -2,7 +2,7 @@ import unittest
 import unittest.mock as mock
 from dotenv import load_dotenv
 import os
-from datetime import date
+import datetime
 from os.path import join, dirname
 import requests
 import bot
@@ -35,7 +35,7 @@ class MockedTranslateResponse:
     def __init__(self, text):
         self.text = text
 
-class logicTestCase(unittest.TestCase):
+class TwitterQueryTestCase(unittest.TestCase):
     def setUp(self):
         self.joke_success_test_params = [
             {
@@ -55,6 +55,9 @@ class logicTestCase(unittest.TestCase):
                 KEY_EXPECTED: "h3lL0"
             },
         ]
+        
+    def mocked_random_choice(self, values):
+        return values[0]
     
     def mocked_bot_api_calls(self, q, count):
         return [
@@ -66,35 +69,31 @@ class logicTestCase(unittest.TestCase):
                 "mocked translate")
             ]
 
-    def test_bot_joke_success(self):
-        for test_case in self.joke_success_test_params:
+    def test_bot_calls_success(self):
+        for test_case in self.success_test_params:
             with mock.patch('requests.request', self.mocked_bot_api_calls):
                 print("hi")
+
             expected = test_case[KEY_EXPECTED]
             print(expected)
             
             self.assertEqual(test_case[KEY_EXPECTED], expected)
+        for test_case in self.dsuccess_test_params:
+            with mock.patch('requests.request', self.mocked_bot_api_calls):
+                print("hi")
 
-    def test_bot_date_success(self):
-        for test_case in self.date_success_test_params:
-            with mock.patch('datetime.date') as mock_date:
-                mock_date.today.return_value = date(2020, 10, 27)
-                mock_date.side_effect = lambda *args, **kw: date(*args, **kw)
-                
-                print("yo")
-            expected = test_case[KEY_EXPECTED]
-            print(expected)
-
-            self.assertEqual(test_case[KEY_EXPECTED], expected)
-
-    def test_bot_translate_success(self):
-        for test_case in self.translate_success_test_params:
-            with mock.patch('requests.get', self.mocked_bot_api_calls):
-                print("sup")
             expected = test_case[KEY_EXPECTED]
             print(expected)
             
             self.assertEqual(test_case[KEY_EXPECTED], expected)
         
+        for test_case in self.translate_success_test_params:
+            with mock.patch('requests.request', self.mocked_bot_api_calls):
+                print("hi")
+
+            expected = test_case[KEY_EXPECTED]
+            print(expected)
+            
+            self.assertEqual(test_case[KEY_EXPECTED], expected)
 if __name__ == '__main__':
     unittest.main()

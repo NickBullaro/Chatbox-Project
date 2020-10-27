@@ -12,6 +12,9 @@
   i) `npm install -g heroku`
   j) `npm i react-google-login`
   k) `npm i react-linkify`
+  l) `pip install coverage`
+  m) `pip install pylint`
+  n) `npm install eslint`
 :warning: :warning: :warning: If you see any error messages, make sure you use `sudo pip` or `sudo npm`. If it says "pip cannot be found", run `which pip` and use `sudo [path to pip from which pip] install` :warning: :warning: :warning:    
 2. If you already have psql set up, **SKIP THE REST OF THE STEPS AND JUST DO THE FOLLOWING COMMAND**: `sudo service postgresql start`    
 3. Create your `sql.env`.
@@ -66,7 +69,8 @@
 7. Once you finish and save, a popup will appear with your ClientID and your client secret. You need your clientID for the next part, however it is saved in your credentials tab in the Google Developer Console if you lose or forget it.
 8. Once you have your clientID, open GoogleButton.jsx and replace the clientID string value with your own clientID.
 
-
+# Setup Coverage
+1. `coverage run -m unittest *.py && coverage html`
 
 # Enabling read/write from SQLAlchemy
 

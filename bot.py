@@ -6,6 +6,13 @@ KEY_IS_BOT = "is_bot"
 KEY_BOT_COMMAND = "bot_command"
 KEY_MESSAGE = "message"
 
+JOKE_URL = "https://joke3.p.rapidapi.com/v1/joke"
+JOKE_HEADERS = {
+            'x-rapidapi-host': "joke3.p.rapidapi.com",
+            'x-rapidapi-key': "6bd46d61f2mshd2c80482e12a730p16f242jsn3b38dc8f3fb4",
+            }
+FUNTRANSLATE_URL = "https://api.funtranslations.com/translate/leetspeak.json?text="
+
 
 class Bot():
     def __init__(self):
@@ -20,37 +27,41 @@ class Bot():
     
     def about(self):
         self.message = "I am Awesome Bot! I can translate any sentence you want into leetspeak! I can also tell you a random joke and today's date! Aren't I awesome?"
-        return self.message
+        #return self.message
+        return {
+            KEY_MESSAGE: self.message
+        }
         
     def helper(self):
         helpStr = 'These are the commands I currently understand: ' + self.commands + '.    -REMEMBER- each command but begin with "!! " or else I wont understand you! ex: "!! joke"'
         self.helpString = helpStr
-        return self.helpString
+        #return self.helpString
+        return {
+            KEY_MESSAGE: self.helpString
+        }
         
     def funtranslate(self, text):
-        base = "https://api.funtranslations.com/translate/leetspeak.json?text=" + text
-        req = requests.get(base)
-        respo = req.json()
-        self.ft_message = respo['contents']['translated']
-        return self.ft_message
+        req = requests.get(FUNTRANSLATE_URL + text).json()
+        self.ft_message = req['contents']['translated']
+        return {
+            KEY_MESSAGE: self.ft_message
+        }
         
     def dat(self):
         today = date.today()
         self.date = "Today's date is " + str(today)
-        return self.date
+        return {
+            KEY_MESSAGE: self.date
+        }
         
         
     def joke(self):
-        url = "https://joke3.p.rapidapi.com/v1/joke"
-        headers = {
-            'x-rapidapi-host': "joke3.p.rapidapi.com",
-            'x-rapidapi-key': "6bd46d61f2mshd2c80482e12a730p16f242jsn3b38dc8f3fb4",
-            }
-        
-        response = requests.request("GET", url, headers=headers)
-        respo = response.json()
-        self.rand_joke = respo['content']
-        return self.rand_joke
+        response = requests.request("GET", JOKE_URL, headers=JOKE_HEADERS).json()
+        #respo = response.json()
+        self.rand_joke = response['content']
+        return {
+            KEY_MESSAGE: self.rand_joke
+        }
         
         
 def switch(arg):
