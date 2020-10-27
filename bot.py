@@ -8,81 +8,72 @@ KEY_MESSAGE = "message"
 
 JOKE_URL = "https://joke3.p.rapidapi.com/v1/joke"
 JOKE_HEADERS = {
-            'x-rapidapi-host': "joke3.p.rapidapi.com",
-            'x-rapidapi-key': "6bd46d61f2mshd2c80482e12a730p16f242jsn3b38dc8f3fb4",
-            }
+    "x-rapidapi-host": "joke3.p.rapidapi.com",
+    "x-rapidapi-key": "6bd46d61f2mshd2c80482e12a730p16f242jsn3b38dc8f3fb4",
+}
 FUNTRANSLATE_URL = "https://api.funtranslations.com/translate/leetspeak.json?text="
 
 
-class Bot():
+class Bot:
     def __init__(self):
-        self.message = ''
-        self.commands = 'about, help, funtranslate <message>, date, joke'
-        self.helpString = ''
-        self.ft_message = ''
-        self.date = ''
-        self.rand_joke = ''
-    
-    
-    
+        self.message = ""
+        self.commands = "about, help, funtranslate <message>, date, joke"
+        self.helpString = ""
+        self.ft_message = ""
+        self.date = ""
+        self.rand_joke = ""
+
     def about(self):
         self.message = "I am Awesome Bot! I can translate any sentence you want into leetspeak! I can also tell you a random joke and today's date! Aren't I awesome?"
-        #return self.message
-        return {
-            KEY_MESSAGE: self.message
-        }
-        
+        # return self.message
+        return {KEY_MESSAGE: self.message}
+
     def helper(self):
-        helpStr = 'These are the commands I currently understand: ' + self.commands + '.    -REMEMBER- each command but begin with "!! " or else I wont understand you! ex: "!! joke"'
+        helpStr = (
+            "These are the commands I currently understand: "
+            + self.commands
+            + '.    -REMEMBER- each command but begin with "!! " or else I wont understand you! ex: "!! joke"'
+        )
         self.helpString = helpStr
-        #return self.helpString
-        return {
-            KEY_MESSAGE: self.helpString
-        }
-        
+        # return self.helpString
+        return {KEY_MESSAGE: self.helpString}
+
     def funtranslate(self, text):
         req = requests.get(FUNTRANSLATE_URL + text).json()
-        self.ft_message = req['contents']['translated']
-        return {
-            KEY_MESSAGE: self.ft_message
-        }
-        
+        self.ft_message = req["contents"]["translated"]
+        return {KEY_MESSAGE: self.ft_message}
+
     def dat(self):
         today = date.today()
         self.date = "Today's date is " + str(today)
-        return {
-            KEY_MESSAGE: self.date
-        }
-        
-        
+        return {KEY_MESSAGE: self.date}
+
     def joke(self):
         response = requests.request("GET", JOKE_URL, headers=JOKE_HEADERS).json()
-        #respo = response.json()
-        self.rand_joke = response['content']
-        return {
-            KEY_MESSAGE: self.rand_joke
-        }
-        
-        
+        # respo = response.json()
+        self.rand_joke = response["content"]
+        return {KEY_MESSAGE: self.rand_joke}
+
+
 def switch(arg):
     bot = Bot()
     message_components = arg.split(" ")
-    
+
     if message_components[0] != "!!":
         return
-    
+
     if len(message_components) == 2:
         bot_cmd, rest_of_message = message_components[1], ""
     else:
         bot_cmd, rest_of_message = message_components[1], message_components[2:]
         print(rest_of_message)
-    
+
     if bot_cmd == "funtranslate":
         if len(message_components) < 3:
             return "You forgot to enter what you wanted me to translate ya goof!"
-        t = ' '.join(rest_of_message)
+        t = " ".join(rest_of_message)
         return bot.funtranslate(t)
-        
+
     elif bot_cmd == "help":
         return bot.helper()
     elif bot_cmd == "about":

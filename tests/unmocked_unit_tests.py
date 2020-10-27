@@ -7,6 +7,7 @@ from os.path import join, dirname
 import app
 import bot
 from bot import KEY_BOT_COMMAND, KEY_MESSAGE
+import models
 
 KEY_INPUT = "input"
 KEY_EXPECTED = "expected"
@@ -18,32 +19,6 @@ botty = bot.Bot()
 
 class parsingLogicTestCase(unittest.TestCase):
     def setUp(self):
-        # self.bot_success_test_params = [
-        #     {
-        #         KEY_INPUT: botty.message,
-        #         KEY_EXPECTED: ""
-        #     },
-        #     {
-        #         KEY_INPUT: botty.commands,
-        #         KEY_EXPECTED: "about, help, funtranslate <message>, date, joke"
-        #     },
-        #     {
-        #         KEY_INPUT: botty.helpString,
-        #         KEY_EXPECTED: ""
-        #     },
-        #     {
-        #         KEY_INPUT: botty.ft_message,
-        #         KEY_EXPECTED: ""
-        #     },
-        #     {
-        #         KEY_INPUT: botty.date,
-        #         KEY_EXPECTED: ""
-        #     },
-        #     {
-        #         KEY_INPUT: botty.rand_joke,
-        #         KEY_EXPECTED: ""
-        #     },
-        # ]
         self.bot_about_success_test_params = [
             {
                 KEY_INPUT: "!! about",
@@ -60,14 +35,6 @@ class parsingLogicTestCase(unittest.TestCase):
                     }
             },
         ]
-    
-    # def test_bot_success(self):
-    #     for test in self.bot_about_success_test_params:
-    #         response = test[KEY_INPUT]
-    #         expected = test[KEY_EXPECTED]
-            
-    #         self.assertEqual(response[KEY_MESSAGE], expected[KEY_MESSAGE])
-    #         # Alternatively (and preferably), you can do self.assertDictEqual(response, expected)
 
     def test_about_success(self):
         for test in self.bot_about_success_test_params:
