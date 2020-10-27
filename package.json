@@ -30,6 +30,7 @@
     ]
   },
   "dependencies": {
+    "eslint": "^7.12.1",
     "is-image-url": "^1.1.8",
     "react-google-login": "^5.1.21",
     "react-linkify": "^1.0.0-alpha",

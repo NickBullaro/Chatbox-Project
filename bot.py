@@ -1,6 +1,11 @@
 import requests
 from datetime import date
 
+BOT_PREFIX = "!!"
+KEY_IS_BOT = "is_bot"
+KEY_BOT_COMMAND = "bot_command"
+KEY_MESSAGE = "message"
+
 
 class Bot():
     def __init__(self):
@@ -18,7 +23,8 @@ class Bot():
         return self.message
         
     def helper(self):
-        self.helpString = 'These are the commands I currently understand: ' + self.commands + '.    -REMEMBER- each command but begin with "!! " or else I wont understand you! ex: "!! joke"'
+        helpStr = 'These are the commands I currently understand: ' + self.commands + '.    -REMEMBER- each command but begin with "!! " or else I wont understand you! ex: "!! joke"'
+        self.helpString = helpStr
         return self.helpString
         
     def funtranslate(self, text):
@@ -49,21 +55,30 @@ class Bot():
         
 def switch(arg):
     bot = Bot()
-    command = arg[1]
-    if command == "funtranslate":
-        if len(arg) < 3:
+    message_components = arg.split(" ")
+    
+    if message_components[0] != "!!":
+        return
+    
+    if len(message_components) == 2:
+        bot_cmd, rest_of_message = message_components[1], ""
+    else:
+        bot_cmd, rest_of_message = message_components[1], message_components[2:]
+        print(rest_of_message)
+    
+    if bot_cmd == "funtranslate":
+        if len(message_components) < 3:
             return "You forgot to enter what you wanted me to translate ya goof!"
-        text = arg[2:]
-        t = ' '.join(text)
+        t = ' '.join(rest_of_message)
         return bot.funtranslate(t)
         
-    elif command == "help":
+    elif bot_cmd == "help":
         return bot.helper()
-    elif command == "about":
+    elif bot_cmd == "about":
         return bot.about()
-    elif command == "date":
+    elif bot_cmd == "date":
         return bot.dat()
-    elif command == "joke":
+    elif bot_cmd == "joke":
         return bot.joke()
     else:
         return "Invalid command! Enter '!! help' to see available commands!"

@@ -1,12 +1,11 @@
 # app.py
+import os
 from os.path import join, dirname
 from dotenv import load_dotenv
-import os
 import flask
 from flask import request
 import flask_sqlalchemy
 import flask_socketio
-import models
 import bot
 
 
@@ -37,15 +36,13 @@ db.app = app
 db.create_all()
 db.session.commit()
 
+import models
 
-def parseM(data):
+def parseInput(data):
     words = data['message'].split()
-    print("_", words)
-    if(words[0] == "!!"):
-        out = bot.switch(words)
+    if words[0] == "!!":
+        out = bot.switch(data)
         return out
-
-    
 
 
 connected = {}
@@ -60,21 +57,19 @@ def emit_all_users(channel):
     socketio.emit(channel, {
         'all_users': all_users
     })
-    
-    
+
+
 def emit_user_count(channel):
     user_count = len(connected)
-    
     socketio.emit(channel, {
         'user_count': user_count
     })
 
 
 def emit_all_messages(channel):
-    all_messages = [ 
+    all_messages = [
         db_message.message for db_message in \
         db.session.query(models.Messages).all()]
-    
     socketio.emit(channel, {
         'allMessages': all_messages
     })
@@ -86,31 +81,29 @@ def on_connect():
     socketio.emit('connected', {
         'test': 'connected'
     })
-    
+
     emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_user_count(COUNT_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
-    
 
 @socketio.on('disconnect')
 def on_disconnect():
     print ('Someone disconnected!')
-    del (connected[request.sid])
+    del connected[request.sid]
     emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_user_count(COUNT_RECEIVED_CHANNEL)
-    
+
 @socketio.on('new google user')
 def on_login(data):
     print('New login from user:', data['user'])
     connected[request.sid] = data['user']
-    
+
     try:
-        db.session.add(models.user_info(data['email'], data['user'], data['pic']));
-        db.session.commit();
-    except Exception as error:
-        db.session.rollback();
+        db.session.add(models.user_info(data['email'], data['user'], data['pic']))
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
         print("User already in db")
-    
     emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_user_count(COUNT_RECEIVED_CHANNEL)
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
@@ -119,28 +112,31 @@ def on_login(data):
 @socketio.on('new message input')
 def on_new_message(data):
     print("Got an event for new message input with data:", data)
-    output = parseM(data)
+    output = bot.switch(data)
+    #output = parseInput(data)
     try:
-        db.session.add(models.Messages(connected[request.sid] + ": " + data["message"], db.session.query(models.user_info.id).filter(models.user_info.user==connected[request.sid]).first().id));
-        db.session.commit();
+        db.session.add(models.Messages(connected[request.sid] + ": " + data["message"],
+            db.session.query(models.user_info.id).filter(models.user_info.user==connected[request.sid]).first().id))
+        db.session.commit()
         if output:
-            db.session.add(models.Messages('Awesome Bot: ' + output, db.session.query(models.user_info.id).filter(models.user_info.user=='Awesome Bot').first().id));
-            db.session.commit();
-    except Exception as error:
-        db.session.rollback();
-        db.session.add(models.Messages("ERROR: User " + connected[request.sid] + "'s message has failed to send! Please try again!", db.session.query(models.user_info.id).filter(models.user_info.user==connected[request.sid]).first().id));
-        db.session.commit();
-    
+            db.session.add(models.Messages('Awesome Bot: ' + output,
+                db.session.query(models.user_info.id).filter(models.user_info.user=='Awesome Bot').first().id))
+            db.session.commit()
+    except Exception:
+        db.session.rollback()
+        db.session.add(models.Messages("ERROR: User " + connected[request.sid] + "'s message has failed to send! Please try again!",
+            db.session.query(models.user_info.id).filter(models.user_info.user==connected[request.sid]).first().id))
+        db.session.commit()
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
 
 @app.route('/')
 def index():
     try:
-        db.session.add(models.user_info('awesomebot@gmail.com', 'Awesome Bot', 'https://www.internetandtechnologylaw.com/files/2019/06/iStock-872962368-chat-bots-265x300.jpg'));
-        db.session.commit();
-    except Exception as error:
-        db.session.rollback();
+        db.session.add(models.user_info('awesomebot@gmail.com', 'Awesome Bot', 'https://www.internetandtechnologylaw.com/files/2019/06/iStock-872962368-chat-bots-265x300.jpg'))
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
         print("User already in db")
     emit_all_users(USERS_RECEIVED_CHANNEL)
     emit_user_count(COUNT_RECEIVED_CHANNEL)
@@ -149,10 +145,11 @@ def index():
     return flask.render_template("index.html")
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
     socketio.run(
         app,
         host=os.getenv('IP', '0.0.0.0'),
         port=int(os.getenv('PORT', 8080)),
         debug=True
     )
+    
