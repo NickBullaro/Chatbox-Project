@@ -7,12 +7,17 @@ from flask import request
 import flask_sqlalchemy
 import flask_socketio
 import bot
+from bot import KEY_IS_BOT, KEY_MESSAGE
 
 
 MESSAGES_RECEIVED_CHANNEL = "messages received"
 USERS_RECEIVED_CHANNEL = "users received"
 COUNT_RECEIVED_CHANNEL = "count received"
 connected = {}
+all_users = []
+user_count = len(connected)
+all_messages = []
+output = ''
 
 app = flask.Flask(__name__)
 
@@ -41,7 +46,6 @@ import models
 
 
 def emit_all_users(channel):
-    all_users = []
     for k in connected:
         all_users.append(connected[k])
 
@@ -97,7 +101,8 @@ def on_login(data):
 @socketio.on("new message input")
 def on_new_message(data):
     print("Got an event for new message input with data:", data)
-    output = bot.switch(data)
+    output = bot.switch(data["message"])
+    print(output)
     # output = parseInput(data)
     try:
         db.session.add(
@@ -110,10 +115,10 @@ def on_new_message(data):
             )
         )
         db.session.commit()
-        if output:
+        if (output[KEY_IS_BOT] == True):
             db.session.add(
                 models.Messages(
-                    "Awesome Bot: " + output,
+                    "Awesome Bot: " + output[KEY_MESSAGE],
                     db.session.query(models.user_info.id)
                     .filter(models.user_info.user == "Awesome Bot")
                     .first()
@@ -121,7 +126,7 @@ def on_new_message(data):
                 )
             )
             db.session.commit()
-    except Exception:
+    except Exception as error:
         db.session.rollback()
         db.session.add(
             models.Messages(

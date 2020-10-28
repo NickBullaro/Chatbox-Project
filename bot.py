@@ -2,9 +2,10 @@ import requests
 from datetime import date
 
 BOT_PREFIX = "!!"
-KEY_IS_BOT = "is_bot"
+KEY_IS_BOT = False
 KEY_BOT_COMMAND = "bot_command"
 KEY_MESSAGE = "message"
+KEY_JOKE = ''
 
 JOKE_URL = "https://joke3.p.rapidapi.com/v1/joke"
 JOKE_HEADERS = {
@@ -26,7 +27,7 @@ class Bot:
     def about(self):
         self.message = "I am Awesome Bot! I can translate any sentence you want into leetspeak! I can also tell you a random joke and today's date! Aren't I awesome?"
         # return self.message
-        return {KEY_MESSAGE: self.message}
+        return {KEY_MESSAGE: self.message, KEY_IS_BOT: True}
 
     def helper(self):
         helpStr = (
@@ -36,23 +37,25 @@ class Bot:
         )
         self.helpString = helpStr
         # return self.helpString
-        return {KEY_MESSAGE: self.helpString}
+        return {KEY_MESSAGE: self.helpString, KEY_IS_BOT: True}
 
     def funtranslate(self, text):
-        req = requests.get(FUNTRANSLATE_URL + text).json()
-        self.ft_message = req["contents"]["translated"]
-        return {KEY_MESSAGE: self.ft_message}
+        print("0000000", text)
+        req = requests.get("https://api.funtranslations.com/translate/leetspeak.json?text=" + text)
+        r = req.json()
+        self.ft_message = r["contents"]["translated"]
+        return {KEY_MESSAGE: self.ft_message, KEY_IS_BOT: True}
 
     def dat(self):
         today = date.today()
         self.date = "Today's date is " + str(today)
-        return {KEY_MESSAGE: self.date}
+        return {KEY_MESSAGE: self.date, KEY_IS_BOT: True}
 
     def joke(self):
-        response = requests.request("GET", JOKE_URL, headers=JOKE_HEADERS).json()
+        response = requests.get(JOKE_URL, headers=JOKE_HEADERS).json()
         # respo = response.json()
         self.rand_joke = response["content"]
-        return {KEY_MESSAGE: self.rand_joke}
+        return {KEY_MESSAGE: self.rand_joke, KEY_IS_BOT: True}
 
 
 def switch(arg):
@@ -60,7 +63,7 @@ def switch(arg):
     message_components = arg.split(" ")
 
     if message_components[0] != "!!":
-        return
+        return {KEY_MESSAGE: arg, KEY_IS_BOT: False}
 
     if len(message_components) == 2:
         bot_cmd, rest_of_message = message_components[1], ""
@@ -83,4 +86,4 @@ def switch(arg):
     elif bot_cmd == "joke":
         return bot.joke()
     else:
-        return "Invalid command! Enter '!! help' to see available commands!"
+        return {KEY_MESSAGE: "Invalid command! Enter '!! help' to see available commands!", KEY_IS_BOT: False}

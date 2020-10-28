@@ -89,7 +89,7 @@ If that doesn't work: `sudo vim $(psql -c "show hba_file;" | grep pg_hba.conf)`
 6. Run your code!    
   a) `npm run watch`. If prompted to install webpack-cli, type "yes"    
   b) In a new terminal, `python app.py`    
-  c) Preview Running Application (might have to clear your cache by doing a hard refresh)    
+  c) Preview Running Application (might have to clear your cache by doing a hard refresh)
 
 
 # Setting up Heroku and pushing your database to it
@@ -158,13 +158,3 @@ If that doesn't work, remove the 'PGUSER=<user>' from the command and try again.
 
 2. Another improvement I would make would be to have different styling for user messages and bot messages. I heard one way to go about it would be to create a sort of role for users and a role for the bot and send it with each message, then check the role in the message component and change the styling from there. However, I don't know exactly how I would go about that but that's why we use Google.
  
-
-
-# --- Milestone 3: ---
-
-
-# Technical Issues
-
-
-
-# Improvements
