@@ -6,7 +6,7 @@ import datetime
 from os.path import join, dirname
 import app
 import bot
-from bot import KEY_BOT_COMMAND, KEY_MESSAGE
+from bot import KEY_BOT_COMMAND, KEY_MESSAGE, KEY_IS_BOT
 import models
 
 KEY_INPUT = "input"
@@ -31,7 +31,8 @@ class parsingLogicTestCase(unittest.TestCase):
             {
                 KEY_INPUT: "!! help",
                 KEY_EXPECTED: {
-                    KEY_MESSAGE: 'These are the commands I currently understand: about, help, funtranslate <message>, date, joke.    -REMEMBER- each command but begin with "!! " or else I wont understand you! ex: "!! joke"'
+                    KEY_MESSAGE: 'These are the commands I currently understand: about, help, funtranslate <message>, date, joke.    -REMEMBER- each command but begin with "!! " or else I wont understand you! ex: "!! joke"',
+                    KEY_IS_BOT: True
                     }
             },
         ]
